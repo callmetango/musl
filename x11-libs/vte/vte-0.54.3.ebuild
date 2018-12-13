@@ -52,7 +52,7 @@ src_prepare() {
 		eapply "${WORKDIR}"/${PN}-0.54.1-command-notify.patch
 	fi
 
-	eapply "${FILESDIR}/${P}-musl-remove-W_EXITCODE.patch"
+	eapply "${FILESDIR}/${PN}-0.54.2-musl-remove-W_EXITCODE.patch"
 	eautoreconf
 
 	use vala && vala_src_prepare
