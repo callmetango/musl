@@ -1,0 +1,39 @@
+Replaces non-POSIX inb_p() and outb_p() calls with POSIX compatible versions
+
+diff -Naur libsmbios-2.4.2.orig/src/libsmbios_c/cmos/cmos_linux.c libsmbios-2.4.2/src/libsmbios_c/cmos/cmos_linux.c
+--- libsmbios-2.4.2.orig/src/libsmbios_c/cmos/cmos_linux.c	2018-06-06 16:40:24.000000000 +0200
++++ libsmbios-2.4.2/src/libsmbios_c/cmos/cmos_linux.c	2019-01-05 13:03:17.873389012 +0100
+@@ -37,17 +37,29 @@
+ 
+ static int linux_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
+ {
+-    outb_p (offset, indexPort);
+-    *byte = (inb_p (dataPort));
++    struct timespec wait;
++    wait.tv_sec = 1 / ( 1000 * 1000 );
++    wait.tv_nsec = 1000;
++    
++    outb (offset, indexPort);
++    nanosleep (&wait, NULL);
++    *byte = (inb (dataPort));
++    nanosleep (&wait, NULL);
+     fnprintf(" cmos read offset 0x%x = 0x%x\n", offset, *byte);
+     return 0;
+ }
+ 
+ static int linux_write_fn(const struct cmos_access_obj *this, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
+ {
++    struct timespec wait;
++    wait.tv_sec = 1 / ( 1000 * 1000 );
++    wait.tv_nsec = 1000;
++    
+     fnprintf(" cmos write: offset 0x%x = 0x%x\n", offset, byte);
+-    outb_p (offset, indexPort);
+-    outb_p (byte, dataPort);
++    outb (offset, indexPort);
++    nanosleep (&wait, NULL);
++    outb (byte, dataPort);
++    nanosleep (&wait, NULL);
+     return 0;
+ }
+ 

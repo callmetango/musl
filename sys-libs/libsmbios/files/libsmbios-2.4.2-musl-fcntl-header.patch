@@ -1,0 +1,13 @@
+Adds missing inclusion of fnctl.h for the open() function
+
+diff -Naur libsmbios-2.4.2.orig/src/libsmbios_c/smi/smi_linux.c libsmbios-2.4.2/src/libsmbios_c/smi/smi_linux.c
+--- libsmbios-2.4.2.orig/src/libsmbios_c/smi/smi_linux.c	2019-01-05 11:31:11.695756936 +0100
++++ libsmbios-2.4.2/src/libsmbios_c/smi/smi_linux.c	2019-01-05 11:37:11.091928160 +0100
+@@ -28,6 +28,7 @@
+ #include <string.h>
+ #include <sys/file.h>  // flock
+ #include <sys/ioctl.h> // ioctl
++#include <fcntl.h> // open
+ #include <errno.h>
+ 
+ // public
