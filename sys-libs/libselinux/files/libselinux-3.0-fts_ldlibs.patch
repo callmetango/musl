@@ -1,0 +1,26 @@
+Fix building against musl and uClibc libc libraries.
+
+Currently, the src/Makefile provides the FTS_LDLIBS when building against musl
+or uClibc. However, this is missing from utils/Makefile, which causes linking
+to fail.
+
+Add the FTS_LDLIBS variable to the LDLIBS variable in utils/Makefile to fix
+compiling against uClibc and musl.
+
+Signed-off-by: Adam Duskett <Aduskett@gmail.com>
+
+[Fix building against musl and uClibc libc libraries. · SELinuxProject/selinux@aa40067 · GitHub]
+(https://github.com/SELinuxProject/selinux/commit/aa40067b7b86d5e4c951fccae1aa98baff148613)
+
+diff -Naur libselinux-3.0.orig/utils/Makefile libselinux-3.0/utils/Makefile
+--- libselinux-3.0.orig/utils/Makefile	2019-11-28 13:46:48.000000000 +0100
++++ libselinux-3.0/utils/Makefile	2020-07-12 09:31:46.788255698 +0200
+@@ -45,7 +45,7 @@
+ 
+ override CFLAGS += -I../include -D_GNU_SOURCE $(DISABLE_FLAGS) $(PCRE_CFLAGS)
+ override LDFLAGS += -L../src
+-override LDLIBS += -lselinux
++override LDLIBS += -lselinux $(FTS_LDLIBS)
+ PCRE_LDLIBS ?= -lpcre
+ 
+ ifeq ($(ANDROID_HOST),y)
